@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import IconDelete from "@/assets/IconDelete.vue";
 import type { Ref } from "vue";
 import { ref } from "vue";
+import ActionDialog from "./ActionDialog.vue";
 import { MOCK_TODOS } from "./mock/TODOS_MOCK";
 import AddTodoDialog from "./todolist/AddTodoDialog.vue";
 import TodoItemDialog from "./todolist/TodoItemDialog.vue";
@@ -20,9 +22,13 @@ export type Todo = {
 };
 
 const todos: Ref<Todo[]> = ref(MOCK_TODOS as Todo[]);
-
+const isOpen = ref(false);
 const addNewTodo = (newTodo: Todo) => {
   todos.value.push(newTodo);
+};
+const deleteTodo = (todo: Todo) => {
+  todos.value = todos.value.filter((t) => t.id !== todo.id);
+  isOpen.value = true;
 };
 </script>
 
@@ -33,6 +39,7 @@ const addNewTodo = (newTodo: Todo) => {
       TODO LIST
     </h1>
   </header>
+
   <div class="flex h-screen flex-row">
     <div
       v-for="title of titles"
@@ -46,17 +53,21 @@ const addNewTodo = (newTodo: Todo) => {
           class="border border-slate-200 w-full rounded cursor-pointer"
         >
           <TodoItemDialog :todo="todo">
-            <div class="size-full">
-              <h3>{{ todo.title }}</h3>
+            <div class="size-full flex flex-row items-center justify-between">
+              <h3 class="text-left">{{ todo.title }}</h3>
+              <IconDelete
+                size="16"
+                color="gray"
+                class="flex-shrink-0"
+                @click.prevent="deleteTodo(todo)"
+              />
             </div>
           </TodoItemDialog>
         </div>
       </template>
     </div>
   </div>
-
-  <!-- <div class="w-1/3 gap-4 flex flex-col items-center justify-center h-screen">
-    <Input type="text" v-model="input" class="w-full" />
-    <Button class="w-full">Add</Button>
-  </div> -->
+  <ActionDialog :isOpen="isOpen" @close="isOpen = false" :duration="2500">
+    <img src="@/assets/delete.png" alt="delete" />
+  </ActionDialog>
 </template>
