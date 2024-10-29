@@ -52,7 +52,7 @@ const deleteTodo = (todo: Todo) => {
           v-if="todo.status === title"
           class="border border-slate-200 w-full rounded cursor-pointer"
         >
-          <TodoItemDialog :todo="todo">
+          <TodoItemDialog :todo="todo" :showClose="true">
             <div class="size-full flex flex-row items-center justify-between">
               <h3 class="text-left">{{ todo.title }}</h3>
               <IconDelete
